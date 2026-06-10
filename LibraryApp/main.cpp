@@ -5,19 +5,14 @@
 #include <iostream>
 
 int main() {
-    // Настройка консоли на UTF-8
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
-
-    // Дополнительно: включить поддержку Unicode в консоли (требуется для корректного ввода)
-    // Это нужно, чтобы std::cin читал UTF-8
-    system("chcp 65001 > nul");
+    // Отключаем кириллицу, работаем с латиницей
+    // Так не будет проблем с кодировками
 
     Library library;
 
-    std::cout << "Загрузка каталога из data/catalog.txt...\n";
+    std::cout << "Loading catalog from data/catalog.txt...\n";
     FileIO::loadFromFile("data/catalog.txt", library);
-    std::cout << "Загружено книг: " << library.getAllBooks().size() << "\n";
+    std::cout << "Loaded books: " << library.getAllBooks().size() << "\n";
 
     Menu menu(library);
     menu.run();

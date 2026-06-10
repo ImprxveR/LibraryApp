@@ -5,13 +5,21 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <sys/stat.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#define mkdir _mkdir
+#else
+#include <sys/stat.h>
+#endif
 
 class FileIO {
 public:
     static bool loadFromFile(const std::string& filename, Library& library) {
         std::ifstream file(filename);
         if (!file.is_open()) {
-            std::cout << "Файл " << filename << " не найден. Будет создан новый при сохранении.\n";
+            std::cout << "File " << filename << " not found. New one will be created on save.\n";
             return false;
         }
 
@@ -31,7 +39,7 @@ public:
                 !std::getline(ss, yearStr, ',') ||
                 !std::getline(ss, copiesStr, ',') ||
                 !std::getline(ss, priceStr)) {
-                std::cout << "Предупреждение: строка " << lineNum << " имеет неверный формат, пропущена.\n";
+                std::cout << "Warning: line " << lineNum << " has invalid format, skipped.\n";
                 continue;
             }
 
@@ -43,14 +51,14 @@ public:
                 price = std::stod(priceStr);
             }
             catch (...) {
-                std::cout << "Предупреждение: строка " << lineNum << " содержит нечисловые данные, пропущена.\n";
+                std::cout << "Warning: line " << lineNum << " contains non-numeric data, skipped.\n";
                 continue;
             }
 
             Book book(id, title, author, genre, year, copies, price);
             if (book.getId().empty() || book.getTitle().empty() || book.getAuthor().empty() ||
                 book.getGenre().empty() || book.getYear() <= 0 || book.getCopies() < 0 || book.getPrice() < 0) {
-                std::cout << "Предупреждение: строка " << lineNum << " содержит некорректные данные, пропущена.\n";
+                std::cout << "Warning: line " << lineNum << " contains invalid data, skipped.\n";
                 continue;
             }
             library.addBook(book);
@@ -60,9 +68,21 @@ public:
     }
 
     static bool saveToFile(const std::string& filename, const Library& library) {
+        // Создаём директорию, если её нет
+        std::string dir = filename;
+        size_t lastSlash = dir.find_last_of("/\\");
+        if (lastSlash != std::string::npos) {
+            dir = dir.substr(0, lastSlash);
+#ifdef _WIN32
+            mkdir(dir.c_str());
+#else
+            mkdir(dir.c_str(), 0777);
+#endif
+        }
+
         std::ofstream file(filename);
         if (!file.is_open()) {
-            std::cerr << "Ошибка: не удалось открыть файл " << filename << " для записи.\n";
+            std::cerr << "Error: could not open file " << filename << " for writing.\n";
             return false;
         }
 
@@ -76,9 +96,9 @@ public:
                 << book.getPrice() << "\n";
         }
         file.close();
-        std::cout << "Данные сохранены в " << filename << "\n";
+        std::cout << "Data saved to " << filename << "\n";
         return true;
     }
 };
 
-#endif
+#endif // FILEIO_H

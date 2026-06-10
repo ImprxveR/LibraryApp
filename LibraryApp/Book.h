@@ -86,12 +86,12 @@ public:
 
     void display() const {
         std::cout << "ID: " << id << "\n"
-            << "Название: " << title << "\n"
-            << "Автор: " << author << "\n"
-            << "Жанр: " << genre << "\n"
-            << "Год: " << year << "\n"
-            << "Кол-во экземпляров: " << copies << "\n"
-            << "Цена: " << price << "\n";
+            << "Title: " << title << "\n"
+            << "Author: " << author << "\n"
+            << "Genre: " << genre << "\n"
+            << "Year: " << year << "\n"
+            << "Copies: " << copies << "\n"
+            << "Price: " << price << "\n";
     }
 
 private:
