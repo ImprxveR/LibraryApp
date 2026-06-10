@@ -19,7 +19,7 @@ public:
             if (std::cin.fail()) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Неверный ввод. Пожалуйста, введите число.\n";
+                std::cout << "Invalid input. Please enter a number.\n";
                 continue;
             }
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -34,11 +34,11 @@ public:
             case 7: handleAnalytics(); break;
             case 8: handleListAll(); break;
             case 9: handleSave(); break;
-            case 0: std::cout << "До свидания!\n"; break;
-            default: std::cout << "Неверный пункт меню.\n"; break;
+            case 0: std::cout << "Goodbye!\n"; break;
+            default: std::cout << "Invalid choice.\n"; break;
             }
             if (choice != 0) {
-                std::cout << "\nНажмите Enter для продолжения...";
+                std::cout << "\nPress Enter to continue...";
                 std::cin.get();
             }
         } while (choice != 0);
@@ -48,18 +48,18 @@ private:
     Library& library;
 
     void showMainMenu() {
-        std::cout << "\n========== БИБЛИОТЕЧНЫЙ КАТАЛОГ ==========\n"
-            << "1. Добавить книгу\n"
-            << "2. Редактировать книгу\n"
-            << "3. Удалить книгу\n"
-            << "4. Поиск книг\n"
-            << "5. Фильтрация каталога\n"
-            << "6. Сортировка\n"
-            << "7. Аналитика\n"
-            << "8. Показать все книги\n"
-            << "9. Сохранить данные в файл\n"
-            << "0. Выход\n"
-            << "Ваш выбор: ";
+        std::cout << "\n========== LIBRARY CATALOG ==========\n"
+            << "1. Add book\n"
+            << "2. Edit book\n"
+            << "3. Remove book\n"
+            << "4. Search books\n"
+            << "5. Filter catalog\n"
+            << "6. Sort\n"
+            << "7. Analytics\n"
+            << "8. Show all books\n"
+            << "9. Save data to file\n"
+            << "0. Exit\n"
+            << "Your choice: ";
     }
 
     std::string inputString(const std::string& prompt, bool allowEmpty = false) {
@@ -70,13 +70,13 @@ private:
             size_t start = input.find_first_not_of(" \t");
             if (start == std::string::npos) {
                 if (allowEmpty) return "";
-                std::cout << "Поле не может быть пустым. Попробуйте снова.\n";
+                std::cout << "Field cannot be empty. Try again.\n";
                 continue;
             }
             size_t end = input.find_last_not_of(" \t");
             input = input.substr(start, end - start + 1);
             if (!allowEmpty && input.empty()) {
-                std::cout << "Поле не может быть пустым. Попробуйте снова.\n";
+                std::cout << "Field cannot be empty. Try again.\n";
                 continue;
             }
             return input;
@@ -91,7 +91,7 @@ private:
             if (std::cin.fail() || value < minValue || value > maxValue) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Ошибка: введите целое число от " << minValue << " до " << maxValue << ".\n";
+                std::cout << "Error: enter an integer from " << minValue << " to " << maxValue << ".\n";
             }
             else {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -108,7 +108,7 @@ private:
             if (std::cin.fail() || value < minValue) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Ошибка: введите число не менее " << minValue << ".\n";
+                std::cout << "Error: enter a number not less than " << minValue << ".\n";
             }
             else {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -120,63 +120,63 @@ private:
     void displayBooks(const std::vector<Book>& books, const std::string& title) {
         std::cout << "\n=== " << title << " ===\n";
         if (books.empty()) {
-            std::cout << "Нет книг, соответствующих критериям.\n";
+            std::cout << "No books matching criteria.\n";
             return;
         }
         for (size_t i = 0; i < books.size(); ++i) {
-            std::cout << "\n--- Книга " << (i + 1) << " ---\n";
+            std::cout << "\n--- Book " << (i + 1) << " ---\n";
             books[i].display();
         }
     }
 
     void handleAddBook() {
-        std::cout << "\n--- Добавление новой книги ---\n";
-        std::string id = inputString("Введите уникальный ID (например, ISBN): ");
+        std::cout << "\n--- Add new book ---\n";
+        std::string id = inputString("Enter unique ID (e.g., ISBN): ");
         if (library.findBookById(id) != nullptr) {
-            std::cout << "Книга с таким ID уже существует.\n";
+            std::cout << "Book with this ID already exists.\n";
             return;
         }
-        std::string title = inputString("Название: ");
-        std::string author = inputString("Автор: ");
-        std::string genre = inputString("Жанр: ");
-        int year = inputInt("Год издания (>0): ", 1);
-        int copies = inputInt("Количество экземпляров (>=0): ", 0);
-        double price = inputDouble("Цена (>=0): ", 0.0);
+        std::string title = inputString("Title: ");
+        std::string author = inputString("Author: ");
+        std::string genre = inputString("Genre: ");
+        int year = inputInt("Year (>0): ", 1);
+        int copies = inputInt("Number of copies (>=0): ", 0);
+        double price = inputDouble("Price (>=0): ", 0.0);
 
         Book newBook(id, title, author, genre, year, copies, price);
         if (newBook.getId().empty() || newBook.getTitle().empty() || newBook.getAuthor().empty() ||
             newBook.getGenre().empty() || newBook.getYear() <= 0 || newBook.getCopies() < 0 || newBook.getPrice() < 0) {
-            std::cout << "Ошибка: некорректные данные. Книга не добавлена.\n";
+            std::cout << "Error: invalid data. Book not added.\n";
             return;
         }
         if (library.addBook(newBook))
-            std::cout << "Книга успешно добавлена.\n";
+            std::cout << "Book added successfully.\n";
     }
 
     void handleEditBook() {
-        std::cout << "\n--- Редактирование книги ---\n";
-        std::string id = inputString("Введите ID книги для редактирования: ");
+        std::cout << "\n--- Edit book ---\n";
+        std::string id = inputString("Enter book ID to edit: ");
         Book* book = library.findBookById(id);
         if (!book) {
-            std::cout << "Книга не найдена.\n";
+            std::cout << "Book not found.\n";
             return;
         }
-        std::cout << "Текущие данные:\n";
+        std::cout << "Current data:\n";
         book->display();
-        std::cout << "\nВведите новые данные (оставьте пустым, чтобы не менять):\n";
+        std::cout << "\nEnter new data (leave empty to keep unchanged):\n";
 
-        std::string newId = inputString("Новый ID (уникальный): ", true);
-        std::string newTitle = inputString("Новое название: ", true);
-        std::string newAuthor = inputString("Новый автор: ", true);
-        std::string newGenre = inputString("Новый жанр: ", true);
-        std::string yearStr = inputString("Новый год (>0): ", true);
-        std::string copiesStr = inputString("Новое количество (>=0): ", true);
-        std::string priceStr = inputString("Новая цена (>=0): ", true);
+        std::string newId = inputString("New ID (unique): ", true);
+        std::string newTitle = inputString("New title: ", true);
+        std::string newAuthor = inputString("New author: ", true);
+        std::string newGenre = inputString("New genre: ", true);
+        std::string yearStr = inputString("New year (>0): ", true);
+        std::string copiesStr = inputString("New copies (>=0): ", true);
+        std::string priceStr = inputString("New price (>=0): ", true);
 
         Book updated = *book;
         if (!newId.empty()) {
             if (newId != id && library.findBookById(newId) != nullptr) {
-                std::cout << "ID " << newId << " уже занят. Редактирование отменено.\n";
+                std::cout << "ID " << newId << " already taken. Edit cancelled.\n";
                 return;
             }
             updated.setId(newId);
@@ -187,47 +187,47 @@ private:
         if (!yearStr.empty()) {
             int y = std::stoi(yearStr);
             if (y > 0) updated.setYear(y);
-            else std::cout << "Неверный год. Изменение пропущено.\n";
+            else std::cout << "Invalid year. Change skipped.\n";
         }
         if (!copiesStr.empty()) {
             int c = std::stoi(copiesStr);
             if (c >= 0) updated.setCopies(c);
-            else std::cout << "Неверное количество. Изменение пропущено.\n";
+            else std::cout << "Invalid copies. Change skipped.\n";
         }
         if (!priceStr.empty()) {
             double p = std::stod(priceStr);
             if (p >= 0) updated.setPrice(p);
-            else std::cout << "Неверная цена. Изменение пропущено.\n";
+            else std::cout << "Invalid price. Change skipped.\n";
         }
 
         if (library.editBook(id, updated))
-            std::cout << "Книга успешно отредактирована.\n";
+            std::cout << "Book edited successfully.\n";
     }
 
     void handleRemoveBook() {
-        std::cout << "\n--- Удаление книги ---\n";
-        std::cout << "1. Удалить по ID\n2. Удалить по названию\nВыбор: ";
+        std::cout << "\n--- Remove book ---\n";
+        std::cout << "1. Remove by ID\n2. Remove by title\nChoice: ";
         int choice;
         std::cin >> choice;
         std::cin.ignore();
         if (choice == 1) {
-            std::string id = inputString("Введите ID: ");
+            std::string id = inputString("Enter ID: ");
             if (library.removeBookById(id))
-                std::cout << "Книга удалена.\n";
+                std::cout << "Book removed.\n";
         }
         else if (choice == 2) {
-            std::string title = inputString("Введите название: ");
+            std::string title = inputString("Enter title: ");
             if (library.removeBookByTitle(title))
-                std::cout << "Книга удалена.\n";
+                std::cout << "Book removed.\n";
         }
         else {
-            std::cout << "Неверный выбор.\n";
+            std::cout << "Invalid choice.\n";
         }
     }
 
     void handleSearch() {
-        std::cout << "\n--- Поиск книг ---\n";
-        std::cout << "1. По названию\n2. По автору\n3. По жанру\nВыбор: ";
+        std::cout << "\n--- Search books ---\n";
+        std::cout << "1. By title\n2. By author\n3. By genre\nChoice: ";
         int choice;
         std::cin >> choice;
         std::cin.ignore();
@@ -235,55 +235,55 @@ private:
         std::vector<Book> result;
         switch (choice) {
         case 1:
-            query = inputString("Введите часть названия: ");
+            query = inputString("Enter part of title: ");
             result = library.searchByTitle(query);
-            displayBooks(result, "Результаты поиска по названию");
+            displayBooks(result, "Search results by title");
             break;
         case 2:
-            query = inputString("Введите часть имени автора: ");
+            query = inputString("Enter part of author name: ");
             result = library.searchByAuthor(query);
-            displayBooks(result, "Результаты поиска по автору");
+            displayBooks(result, "Search results by author");
             break;
         case 3:
-            query = inputString("Введите часть жанра: ");
+            query = inputString("Enter part of genre: ");
             result = library.searchByGenre(query);
-            displayBooks(result, "Результаты поиска по жанру");
+            displayBooks(result, "Search results by genre");
             break;
-        default: std::cout << "Неверный выбор.\n";
+        default: std::cout << "Invalid choice.\n";
         }
     }
 
     void handleFilter() {
-        std::cout << "\n--- Фильтрация ---\n";
-        std::cout << "1. По диапазону года издания\n2. По диапазону цены\nВыбор: ";
+        std::cout << "\n--- Filter ---\n";
+        std::cout << "1. By year range\n2. By price range\nChoice: ";
         int choice;
         std::cin >> choice;
         std::cin.ignore();
         if (choice == 1) {
-            int from = inputInt("Год от: ", 1);
-            int to = inputInt("Год до: ", from);
+            int from = inputInt("Year from: ", 1);
+            int to = inputInt("Year to: ", from);
             auto result = library.filterByYearRange(from, to);
-            displayBooks(result, "Фильтр по году");
+            displayBooks(result, "Filter by year");
         }
         else if (choice == 2) {
-            double from = inputDouble("Цена от: ", 0.0);
-            double to = inputDouble("Цена до: ", from);
+            double from = inputDouble("Price from: ", 0.0);
+            double to = inputDouble("Price to: ", from);
             auto result = library.filterByPriceRange(from, to);
-            displayBooks(result, "Фильтр по цене");
+            displayBooks(result, "Filter by price");
         }
         else {
-            std::cout << "Неверный выбор.\n";
+            std::cout << "Invalid choice.\n";
         }
     }
 
     void handleSort() {
-        std::cout << "\n--- Сортировка ---\n";
-        std::cout << "1. По году издания\n2. По количеству экземпляров\n3. По названию (алфавит)\n4. По автору (алфавит)\nВыбор: ";
+        std::cout << "\n--- Sort ---\n";
+        std::cout << "1. By year\n2. By copies\n3. By title (alphabetical)\n4. By author (alphabetical)\nChoice: ";
         int choice;
         std::cin >> choice;
         std::cin.ignore();
         int dirChoice;
-        std::cout << "Направление: 1 - по возрастанию, 2 - по убыванию: ";
+        std::cout << "Order: 1 - ascending, 2 - descending: ";
         std::cin >> dirChoice;
         std::cin.ignore();
         bool ascending = (dirChoice == 1);
@@ -293,40 +293,40 @@ private:
         case 2: library.sortByCopies(ascending); break;
         case 3: library.sortByTitle(ascending); break;
         case 4: library.sortByAuthor(ascending); break;
-        default: std::cout << "Неверный выбор.\n"; return;
+        default: std::cout << "Invalid choice.\n"; return;
         }
-        std::cout << "Сортировка выполнена.\n";
+        std::cout << "Sorting completed.\n";
     }
 
     void handleAnalytics() {
-        std::cout << "\n--- Аналитика ---\n";
+        std::cout << "\n--- Analytics ---\n";
         double total = library.getTotalValue();
-        std::cout << "Общая стоимость фонда: " << total << " руб.\n";
+        std::cout << "Total collection value: " << total << " rub.\n";
 
         auto needRestock = library.getBooksNeedingRestock(2);
-        std::cout << "\nКниги, требующие пополнения (остаток <= 2):\n";
-        if (needRestock.empty()) std::cout << "Нет таких книг.\n";
+        std::cout << "\nBooks needing restock (copies <= 2):\n";
+        if (needRestock.empty()) std::cout << "No such books.\n";
         else for (const auto& b : needRestock) {
-            std::cout << b.getTitle() << " (остаток: " << b.getCopies() << ")\n";
+            std::cout << b.getTitle() << " (remaining: " << b.getCopies() << ")\n";
         }
 
         auto top3 = library.getTop3MostExpensive();
-        std::cout << "\nТоп-3 самых дорогих книг:\n";
-        if (top3.empty()) std::cout << "Нет книг.\n";
+        std::cout << "\nTop 3 most expensive books:\n";
+        if (top3.empty()) std::cout << "No books.\n";
         else for (size_t i = 0; i < top3.size(); ++i) {
-            std::cout << i + 1 << ". " << top3[i].getTitle() << " - " << top3[i].getPrice() << " руб.\n";
+            std::cout << i + 1 << ". " << top3[i].getTitle() << " - " << top3[i].getPrice() << " rub.\n";
         }
     }
 
     void handleListAll() {
-        displayBooks(library.getAllBooks(), "Все книги в каталоге");
+        displayBooks(library.getAllBooks(), "All books in catalog");
     }
 
     void handleSave() {
         if (FileIO::saveToFile("data/catalog.txt", library))
-            std::cout << "Сохранение успешно выполнено.\n";
+            std::cout << "Save successful.\n";
         else
-            std::cout << "Ошибка сохранения.\n";
+            std::cout << "Save error.\n";
     }
 };
 
