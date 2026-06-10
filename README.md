@@ -32,24 +32,24 @@
 
 Скриншоты:
 
-![Главное меню](screenshots/Screenshot_4)
+![Главное меню](screenshots/Screenshot_4.png)
 
-![Новая книга](screenshots/Screenshot_1)
+![Новая книга](screenshots/Screenshot_1.png)
 
-![Редактирование](screenshots/Screenshot_2)
+![Редактирование](screenshots/Screenshot_2.png)
 
-![Удаление](screenshots/Screenshot_3)
+![Удаление](screenshots/Screenshot_3.png)
 
-![Поиск](screenshots/Screenshot_5)
+![Поиск](screenshots/Screenshot_5.png)
 
-![Фильтр](screenshots/Screenshot_6)
+![Фильтр](screenshots/Screenshot_6.png)
 
-![Сортировка](screenshots/Screenshot_7)
+![Сортировка](screenshots/Screenshot_7.png)
 
-![Аналитика](screenshots/Screenshot_8)
+![Аналитика](screenshots/Screenshot_8.png)
 
-![Все книги](screenshots/Screenshot_9)
+![Все книги](screenshots/Screenshot_9.png)
 
-![Сохранение в каталог](screenshots/Screenshot_10)
+![Сохранение в каталог](screenshots/Screenshot_10.png)
 
-![Выход](screenshots/Screenshot_11)
+![Выход](screenshots/Screenshot_11.png)
